@@ -19,6 +19,8 @@ pixel = pygame.font.Font('progresspixel_bold.ttf', 30)
 
 all_sprites = pygame.sprite.Group()
 
+play = False
+
 
 def terminate():
     pygame.quit()
@@ -131,41 +133,37 @@ def load_image(name, colorkey=None):
     return image
 
 
-filled_cells = []   # список заполняемых клеток для первого поля (корабли)
+filled_cells = []  # список заполняемых клеток для первого поля (корабли)
 filled_cells2 = []  # список заполняемых клеток для второго поля  (корабли)
 
-near_cells = []   # промежуточный список для создания конечного new_near_cells
-near_cells2 = []   # # промежуточный список для создания конечного new_near_cells2
+near_cells = []  # промежуточный список для создания конечного new_near_cells
+near_cells2 = []  # # промежуточный список для создания конечного new_near_cells2
 
-
-new_near_cells = []   # список заполняемых клеток для первого поля (клетки вокруг кораблей, которые нельзя заполнять)
-new_near_cells2 = []   # # список заполняемых клеток для второго поля (клетки вокруг кораблей, которые нельзя заполнять)
+new_near_cells = []  # список заполняемых клеток для первого поля (клетки вокруг кораблей, которые нельзя заполнять)
+new_near_cells2 = []  # # список заполняемых клеток для второго поля (клетки вокруг кораблей, которые нельзя заполнять)
 
 ship_map1 = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ]                                   # карта с кораблями первого игрока
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             ]  # карта с кораблями первого игрока
 ship_map2 = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            ]                                  # карта с кораблями второго игрока
-
-
-
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             ]  # карта с кораблями второго игрока
 
 
 def start_game_player1():
@@ -174,14 +172,20 @@ def start_game_player1():
     game = True
 
     clock = pygame.time.Clock()
-
-    # wave = load_image("waves2.jpg")
-    # wave = pygame.transform.scale(wave, (500, 400))
-    # waves = AnimatedSprite(wave, 9, 6, 320, 305)
-
-    # wave = load_image("reversed.jpg")
-    # wave1 = pygame.transform.scale(wave, (300, 200))
-    # waves1 = AnimatedSprite(wave1, 9, 6, 180, 203)       попытка добавить анимацию на поле
+    # добавление анимации на поле
+    wave_1 = load_image("waves2.jpg")
+    wave_2 = load_image("reversed.jpg")
+    wave1 = pygame.transform.scale(wave_1, (500, 400))
+    wave2 = pygame.transform.scale(wave_2, (600, 500))
+    wave3 = pygame.transform.scale(wave_1, (300, 200))
+    wave4 = pygame.transform.scale(wave_2, (300, 200))
+    wave5 = pygame.transform.scale(wave_1, (400, 300))
+    waves1 = AnimatedSprite(wave1, 9, 6, 322, 330)
+    waves2 = AnimatedSprite(wave2, 9, 6, 103, 288)
+    waves3 = AnimatedSprite(wave3, 9, 6, 103, 120)
+    waves4 = AnimatedSprite(wave4, 9, 6, 265, 280)
+    waves5 = AnimatedSprite(wave5, 9, 6, 315, 157)
+    waves6 = AnimatedSprite(wave5, 9, 6, 150, 182)
 
     drawing = False
 
@@ -229,7 +233,6 @@ def start_game_player1():
                         spisok.append(i)
                 spisok = sorted(spisok)
 
-
                 # проверка: подходят ли выделенные клетки
                 if len(spisok) == 4 and cells4 > 0:
                     if (spisok[0][0] == spisok[1][0] == spisok[2][0] == spisok[3][0] and spisok[0][1] ==
@@ -242,7 +245,7 @@ def start_game_player1():
                         if spisok[0] not in new_near_cells and spisok[1] not in new_near_cells and spisok[2] \
                                 not in new_near_cells and spisok[3] not in new_near_cells:
                             for i in spisok:
-                                ship_map1[i[0] - 1][i[1] - 1] = 1
+                                ship_map1[i[1] - 1][i[0] - 1] = 1
                             filled_cells.append(spisok)
                             print(filled_cells)
                             cells4 -= 1
@@ -256,7 +259,7 @@ def start_game_player1():
                         if spisok[0] not in new_near_cells and spisok[1] not in new_near_cells and spisok[2] \
                                 not in new_near_cells:
                             for i in spisok:
-                                ship_map1[i[0] - 1][i[1] - 1] = 1
+                                ship_map1[i[1] - 1][i[0] - 1] = 1
                             filled_cells.append(spisok)
                             print(filled_cells)
                             cells3 -= 1
@@ -268,7 +271,7 @@ def start_game_player1():
                                               spisok[1][1]):
                         if spisok[0] not in new_near_cells and spisok[1] not in new_near_cells:
                             for i in spisok:
-                                ship_map1[i[0] - 1][i[1] - 1] = 1
+                                ship_map1[i[1] - 1][i[0] - 1] = 1
                             filled_cells.append(spisok)
                             print(filled_cells)
                             cells2 -= 1
@@ -276,19 +279,19 @@ def start_game_player1():
                 if len(spisok) == 1 and cells1 > 0:
                     if spisok[0] not in new_near_cells:
                         for i in spisok:
-                            ship_map1[i[0] - 1][i[1] - 1] = 1
+                            ship_map1[i[1] - 1][i[0] - 1] = 1
                         filled_cells.append(spisok)
                         print(filled_cells)
                         cells1 -= 1
 
                 drawing = False
 
-
             # если все корабли выставлены, теперь корабли выбирает второй игрок
             if cells1 == 0 and cells2 == 0 and cells3 == 0 and cells4 == 0:
                 new_near_cells = []
+                for i in range(1, 7):
+                    eval(f'all_sprites.remove(waves{i})')
                 start_game_player2()
-
 
         all_sprites.draw(screen)
         all_sprites.update()
@@ -316,6 +319,7 @@ def start_game_player1():
 
         all_sprites.draw(screen)
         all_sprites.update()
+
         clock.tick(6)
         pygame.display.flip()
 
@@ -364,7 +368,6 @@ def start_game_player1():
             ship4 = font3.render(f'1 cell ships: {cells1}', True, ('green'))
             screen.blit(ship4, (80, 460))
 
-
         pygame.display.update()
 
 
@@ -374,27 +377,21 @@ def start_game_player2():
 
     game = True
 
-    ship_map = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                ]
-
     clock = pygame.time.Clock()
 
-    # wave = load_image("waves2.jpg")
-    # wave = pygame.transform.scale(wave, (500, 400))
-    # waves = AnimatedSprite(wave, 9, 6, 320, 305)
-
-    # wave = load_image("reversed.jpg")
-    # wave1 = pygame.transform.scale(wave, (300, 200))
-    # waves1 = AnimatedSprite(wave1, 9, 6, 180, 203)
+    wave_1 = load_image("waves2.jpg")
+    wave_2 = load_image("reversed.jpg")
+    wave1 = pygame.transform.scale(wave_1, (500, 400))
+    wave2 = pygame.transform.scale(wave_2, (600, 500))
+    wave3 = pygame.transform.scale(wave_1, (300, 200))
+    wave4 = pygame.transform.scale(wave_2, (300, 200))
+    wave5 = pygame.transform.scale(wave_1, (400, 300))
+    waves1 = AnimatedSprite(wave1, 9, 6, 605, 220)
+    waves2 = AnimatedSprite(wave2, 9, 6, 430, 178)
+    waves3 = AnimatedSprite(wave3, 9, 6, 511, 120)
+    waves4 = AnimatedSprite(wave4, 9, 6, 670, 145)
+    waves5 = AnimatedSprite(wave5, 9, 6, 570, 345)
+    waves6 = AnimatedSprite(wave5, 9, 6, 490, 296)
 
     drawing = False
 
@@ -453,7 +450,7 @@ def start_game_player2():
                         if spisok[0] not in new_near_cells2 and spisok[1] not in new_near_cells2 and spisok[2] \
                                 not in new_near_cells2 and spisok[3] not in new_near_cells2:
                             for i in spisok:
-                                ship_map2[i[0] - 1][i[1] - 1] = 1
+                                ship_map2[i[1] - 1][i[0] - 1] = 1
                             filled_cells2.append(spisok)
                             print(filled_cells2)
                             cells4 -= 1
@@ -467,7 +464,7 @@ def start_game_player2():
                         if spisok[0] not in new_near_cells2 and spisok[1] not in new_near_cells2 and spisok[2] \
                                 not in new_near_cells2:
                             for i in spisok:
-                                ship_map2[i[0] - 1][i[1] - 1] = 1
+                                ship_map2[i[1] - 1][i[0] - 1] = 1
                             filled_cells2.append(spisok)
                             print(filled_cells2)
                             cells3 -= 1
@@ -479,7 +476,7 @@ def start_game_player2():
                                               spisok[1][1]):
                         if spisok[0] not in new_near_cells2 and spisok[1] not in new_near_cells2:
                             for i in spisok:
-                                ship_map2[i[0] - 1][i[1] - 1] = 1
+                                ship_map2[i[1] - 1][i[0] - 1] = 1
                             filled_cells2.append(spisok)
                             print(filled_cells2)
                             cells2 -= 1
@@ -487,7 +484,7 @@ def start_game_player2():
                 if len(spisok) == 1 and cells1 > 0:
                     if spisok[0] not in new_near_cells2:
                         for i in spisok:
-                            ship_map2[i[0] - 1][i[1] - 1] = 1
+                            ship_map2[i[1] - 1][i[0] - 1] = 1
                         filled_cells2.append(spisok)
                         print(filled_cells2)
                         cells1 -= 1
@@ -496,9 +493,12 @@ def start_game_player2():
 
             if cells1 == 0 and cells2 == 0 and cells3 == 0 and cells4 == 0:
                 new_near_cells = []
+                for i in range(1, 7):
+                    eval(f'all_sprites.remove(waves{i})')
                 print('over')
                 print(ship_map1)
-                print(ship_map2)   # здесь должен быть переход в режим игры
+                print(ship_map2)
+                play_game_1()  # здесь должен быть переход в режим игры
 
         all_sprites.draw(screen)
         all_sprites.update()
@@ -577,56 +577,353 @@ def start_game_player2():
         pygame.display.update()
 
 
-def draw_ship(filled_cells, near_cells, new_near_cells3):   # класс для отрисовки заполненных клеток
+
+wrecked_cells = []
+
+battle = False
+
+filled_cells_pl1 = []
+near_cells_pl1 = []
+new_near_cells_pl1 = []
+
+def play_game_1():
+    player1 = True
+
+    new_near_cells = [1]
+
+    global battle
+
+    play = True
+
+    game = True
+
+    clock = pygame.time.Clock()
+    # добавление анимации на поле
+    wave_1 = load_image("waves2.jpg")
+    wave_2 = load_image("reversed.jpg")
+    wave1 = pygame.transform.scale(wave_1, (500, 400))
+    wave2 = pygame.transform.scale(wave_2, (600, 500))
+    wave3 = pygame.transform.scale(wave_1, (300, 200))
+    wave4 = pygame.transform.scale(wave_2, (300, 200))
+    wave5 = pygame.transform.scale(wave_1, (400, 300))
+    waves1 = AnimatedSprite(wave1, 9, 6, 322, 330)
+    waves2 = AnimatedSprite(wave2, 9, 6, 103, 288)
+    waves3 = AnimatedSprite(wave3, 9, 6, 103, 120)
+    waves4 = AnimatedSprite(wave4, 9, 6, 265, 280)
+    waves5 = AnimatedSprite(wave5, 9, 6, 315, 157)
+    waves6 = AnimatedSprite(wave5, 9, 6, 150, 182)
+
+    drawing = False
+
+    screen.fill((0, 0, 0))
+
+    cells4 = 1
+    cells3 = 2
+    cells2 = 3
+    cells1 = 4
+
+    while game:
+        if not drawing:
+            surf = pygame.Surface((297, 297))
+            surf.fill(('#480607'))
+            screen.blit(surf, (80, 100))
+            surf1 = pygame.Surface((297, 297))
+            surf1.fill(('#008B8B'))
+            screen.blit(surf1, (410, 100))
+
+            cells_coll = []
+
+        board = Board(11, 11)
+        board1 = Board(11, 11)
+        board1.set_view(410, 100, 27)
+        board.set_view(80, 100, 27)
+
+        draw_ship(filled_cells_pl1, near_cells_pl1, new_near_cells_pl1, play=True)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if board.get_click(event.pos) is not None:
+                    x, y = board.get_click(event.pos)
+                    cells_coll.append([x, y])
+                    print(x, y)
+                    board.fill_cell(x, y, '#0A5257')
+
+                    drawing = True
+
+                    print(cells_coll)
+                    print(ship_map2[cells_coll[0][0] - 1][cells_coll[0][1] - 1])
+                    print(ship_map2)
+                    if ship_map2[cells_coll[0][1] - 1][cells_coll[0][0] - 1] == 1:
+                        print('прошел')
+                        filled_cells_pl1.append(cells_coll)
+                        battle = True
+                        play_game_1()
+                    if ship_map2[cells_coll[0][1] - 1][cells_coll[0][0] - 1] != 1:
+                        new_near_cells_pl1.append(cells_coll)
+                        print('не прошел')
+                        play_game_2()
+
+
+                    # проверка: подходят ли выделенные клетки
+
+                    drawing = False
+
+            # если все корабли выставлены, теперь корабли выбирает второй игрок
+
+        all_sprites.draw(screen)
+        all_sprites.update()
+
+        f1 = pygame.font.Font('progresspixel_bold.ttf', 15)
+        number = 0
+        for i in range(115, 350, 27):
+            number += 1
+            text1 = f1.render(str(number), True, ('white'))
+            screen.blit(text1, (i, 100))
+            screen.blit(text1, (i + 330, 100))
+
+        text1 = f1.render('10', True, ('white'))
+        screen.blit(text1, (354, 100))
+        screen.blit(text1, (365 + 318, 100))
+
+        number = 0
+        spisok = ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'к']
+        for i in range(130, 400, 27):
+            text1 = f1.render(spisok[number], True, ('white'))
+            screen.blit(text1, (90, i))
+            screen.blit(text1, (90 + 330, i))
+
+            number += 1
+
+        all_sprites.draw(screen)
+        all_sprites.update()
+
+        clock.tick(6)
+        pygame.display.flip()
+
+        font2 = pygame.font.Font('progresspixel_bold.ttf', 24)
+        font3 = pygame.font.Font('progresspixel_bold.ttf', 19)
+        text2 = font3.render('player 1:', True, ('#008B8B'))
+        screen.blit(text2, (80, 20))
+
+        text1 = font2.render('your turn', True, ('white'))
+        screen.blit(text1, (80, 40))
+
+        board.render(screen)
+        board1.render(screen)
+
+        blitt = pygame.Surface((130, 130))
+        blitt.fill(('black'))
+        screen.blit(blitt, (80, 400))
+
+        pygame.display.update()
+
+filled_cells4 = []
+near_cells4 = []
+new_near_cells4 = []
+
+
+def play_game_2():
+
+    player1 = True
+
+    new_near_cells = [1]
+
+    global battle
+
+    play = True
+
+    game = True
+
+    clock = pygame.time.Clock()
+
+    wave_1 = load_image("waves2.jpg")
+    wave_2 = load_image("reversed.jpg")
+    wave1 = pygame.transform.scale(wave_1, (500, 400))
+    wave2 = pygame.transform.scale(wave_2, (600, 500))
+    wave3 = pygame.transform.scale(wave_1, (300, 200))
+    wave4 = pygame.transform.scale(wave_2, (300, 200))
+    wave5 = pygame.transform.scale(wave_1, (400, 300))
+    waves1 = AnimatedSprite(wave1, 9, 6, 605, 220)
+    waves2 = AnimatedSprite(wave2, 9, 6, 430, 178)
+    waves3 = AnimatedSprite(wave3, 9, 6, 511, 120)
+    waves4 = AnimatedSprite(wave4, 9, 6, 670, 145)
+    waves5 = AnimatedSprite(wave5, 9, 6, 570, 345)
+    waves6 = AnimatedSprite(wave5, 9, 6, 490, 296)
+
+    drawing = False
+
+    screen.fill((0, 0, 0))
+
+    cells4 = 1
+    cells3 = 2
+    cells2 = 3
+    cells1 = 4
+
+    while game:
+        if not drawing:
+            surf = pygame.Surface((297, 297))
+            surf.fill(('#480607'))
+            screen.blit(surf, (80, 100))
+            surf1 = pygame.Surface((297, 297))
+            surf1.fill(('#008B8B'))
+            screen.blit(surf1, (410, 100))
+
+            cells_coll = []
+
+        board = Board(11, 11)
+        board1 = Board(11, 11)
+        board1.set_view(410, 100, 27)
+        board.set_view(80, 100, 27)
+
+        draw_ship(filled_cells4, near_cells4, new_near_cells4, play=True, number=2)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if board1.get_click(event.pos) is not None:
+                    x, y = board1.get_click(event.pos)
+                    cells_coll.append([x, y])
+                    print(x, y)
+                    board1.fill_cell(x, y, '#0A5257')
+
+                    drawing = True
+
+                    print(cells_coll)
+                    print(cells_coll[0][0])
+                    print(cells_coll[0][1])
+                    if ship_map1[cells_coll[0][1] - 1][cells_coll[0][0] - 1] == 1 and cells_coll not in filled_cells4:
+                        print('прошел')
+                        filled_cells4.append(cells_coll)
+                    elif ship_map1[cells_coll[0][1] - 1][cells_coll[0][0] - 1] != 1:
+                        print('не прошел')
+                        new_near_cells4.append(cells_coll)
+                        play_game_1()
+
+                drawing = False
+ # здесь должен быть переход в режим игры
+
+        all_sprites.draw(screen)
+        all_sprites.update()
+
+        f1 = pygame.font.Font('progresspixel_bold.ttf', 15)
+        number = 0
+        for i in range(115, 350, 27):
+            number += 1
+            text1 = f1.render(str(number), True, ('white'))
+            screen.blit(text1, (i, 100))
+            screen.blit(text1, (i + 330, 100))
+
+        text1 = f1.render('10', True, ('white'))
+        screen.blit(text1, (354, 100))
+        screen.blit(text1, (365 + 318, 100))
+
+        number = 0
+        spisok = ['а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'к']
+        for i in range(130, 400, 27):
+            text1 = f1.render(spisok[number], True, ('white'))
+            screen.blit(text1, (90, i))
+            screen.blit(text1, (90 + 330, i))
+
+            number += 1
+
+        all_sprites.draw(screen)
+        all_sprites.update()
+        clock.tick(6)
+        pygame.display.flip()
+
+        font2 = pygame.font.Font('progresspixel_bold.ttf', 24)
+        font3 = pygame.font.Font('progresspixel_bold.ttf', 19)
+        text2 = font3.render('player 2:', True, ('#480607'))
+        screen.blit(text2, (620, 20))
+
+        text1 = font2.render('your turn', True, ('white'))
+        screen.blit(text1, (600, 40))
+
+        board.render(screen)
+        board1.render(screen)
+
+        blitt = pygame.Surface((130, 130))
+        blitt.fill(('black'))
+        screen.blit(blitt, (580, 400))
+
+        font3 = pygame.font.Font('progresspixel_bold.ttf', 15)
+
+
+        pygame.display.update()
+
+
+def draw_ship(filled_cells_none, near_cells_none, new_near_cells_none, play=False, number=1):  # класс для отрисовки заполненных клеток
     global new_near_cells2
     global new_near_cells
 
-    for i in range(len(filled_cells)):
-        for y in range(len(filled_cells[i])):
-            near_cells.append([filled_cells[i][y][0] - 1, filled_cells[i][y][1] - 1])
-            near_cells.append([filled_cells[i][y][0], filled_cells[i][y][1] - 1])
-            near_cells.append([filled_cells[i][y][0] + 1, filled_cells[i][y][1] - 1])
-            near_cells.append([filled_cells[i][y][0] - 1, filled_cells[i][y][1]])
-            near_cells.append([filled_cells[i][y][0] + 1, filled_cells[i][y][1]])
-            near_cells.append([filled_cells[i][y][0] - 1, filled_cells[i][y][1] + 1])
-            near_cells.append([filled_cells[i][y][0], filled_cells[i][y][1] + 1])
-            near_cells.append([filled_cells[i][y][0] + 1, filled_cells[i][y][1] + 1])
 
-    for i in near_cells:
-        if i not in new_near_cells3:
-            new_near_cells3.append(i)
+    if play is False:
+        for i in range(len(filled_cells_none)):
+            for y in range(len(filled_cells_none[i])):
+                near_cells_none.append([filled_cells_none[i][y][0] - 1, filled_cells_none[i][y][1] - 1])
+                near_cells_none.append([filled_cells_none[i][y][0], filled_cells_none[i][y][1] - 1])
+                near_cells_none.append([filled_cells_none[i][y][0] + 1, filled_cells_none[i][y][1] - 1])
+                near_cells_none.append([filled_cells_none[i][y][0] - 1, filled_cells_none[i][y][1]])
+                near_cells_none.append([filled_cells_none[i][y][0] + 1, filled_cells_none[i][y][1]])
+                near_cells_none.append([filled_cells_none[i][y][0] - 1, filled_cells_none[i][y][1] + 1])
+                near_cells_none.append([filled_cells_none[i][y][0], filled_cells_none[i][y][1] + 1])
+                near_cells_none.append([filled_cells_none[i][y][0] + 1, filled_cells_none[i][y][1] + 1])
 
-    for i in sorted(new_near_cells3):
-        if i[0] == 0 or i[0] > 10 or i[1] == 0 or i[1] > 10:
-            del new_near_cells3[new_near_cells3.index(i)]
+        for i in near_cells_none:
+            if i not in new_near_cells_none:
+                new_near_cells_none.append(i)
 
-    for g in sorted(new_near_cells3):
-        for i in range(len(filled_cells)):
-            for y in range(len(filled_cells[i])):
-                if g == filled_cells[i][y]:
-                    del new_near_cells3[new_near_cells3.index(g)]
-    if len(new_near_cells) == 0:
-        x = 410
-        near_color = '#2F0404'
-        color = '#080101'
+        for i in sorted(new_near_cells_none):
+            if i[0] == 0 or i[0] > 10 or i[1] == 0 or i[1] > 10:
+                del new_near_cells_none[new_near_cells_none.index(i)]
+
+        for g in sorted(new_near_cells_none):
+            for i in range(len(filled_cells_none)):
+                for y in range(len(filled_cells_none[i])):
+                    if g == filled_cells_none[i][y]:
+                        del new_near_cells_none[new_near_cells_none.index(g)]
+    if play is False:
+        if len(new_near_cells) == 0:
+            x = 410
+            near_color = '#2F0404'
+            color = '#080101'
+        else:
+            x = 80
+            near_color = '#0A5257'
+            color = '#053538'
     else:
-        x = 80
-        near_color = '#0A5257'
-        color = '#053538'
-    for i in range(len(filled_cells)):
-        for y in range(len(filled_cells[i])):
+        if number == 1:
+            x = 80
+            near_color = '#2F0404'
+            color = '#080101'
+        else:
+            x = 410
+            near_color = '#0A5257'
+            color = '#053538'
+    for i in range(len(filled_cells_none)):
+        for y in range(len(filled_cells_none[i])):
             board2 = Board(11, 11)
             board2.set_view(x, 100, 27)
-            board2.fill_cell(filled_cells[i][y][0], filled_cells[i][y][1], color)
+            board2.fill_cell(filled_cells_none[i][y][0], filled_cells_none[i][y][1], color)
             indexx = near_cells
+    for i in new_near_cells_none:
+        if play is True:
+            board2 = Board(11, 11)
+            board2.set_view(x, 100, 27)
+            board2.fill_cell(i[0][0], i[0][1], near_color)
 
-    for i in new_near_cells3:
-        board2 = Board(11, 11)
-        board2.set_view(x, 100, 27)
-        board2.fill_cell(i[0], i[1], near_color)
+        else:
+            board2 = Board(11, 11)
+            board2.set_view(x, 100, 27)
+            board2.fill_cell(i[0], i[1], near_color)
 
 
-class Board:   # класс для создания полей
+class Board:  # класс для создания полей
     # создание поля
     def __init__(self, width, height):
         self.width = width
